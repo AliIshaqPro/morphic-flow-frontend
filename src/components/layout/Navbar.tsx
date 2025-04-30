@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,6 +21,11 @@ const Navbar: React.FC = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    // Close mobile menu when location changes
+    setIsMobileMenuOpen(false);
+  }, [location]);
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
@@ -38,12 +44,16 @@ const Navbar: React.FC = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
-          <NavLinks />
+          <NavLinks location={location.pathname} />
           <div className="flex items-center gap-4">
-            <Button variant="ghost">Login</Button>
-            <Button className="bg-gradient-to-r from-theme-blue to-theme-purple hover:opacity-90 transition-opacity">
-              Get Started
-            </Button>
+            <Link to="/dashboard">
+              <Button variant="ghost">Login</Button>
+            </Link>
+            <Link to="/builder">
+              <Button className="bg-gradient-to-r from-theme-blue to-theme-purple hover:opacity-90 transition-opacity">
+                Get Started
+              </Button>
+            </Link>
           </div>
         </nav>
 
@@ -57,12 +67,16 @@ const Navbar: React.FC = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden glass absolute top-full left-0 right-0 p-4 animate-fade-in">
           <nav className="flex flex-col space-y-4">
-            <NavLinks mobile />
+            <NavLinks mobile location={location.pathname} />
             <div className="pt-4 flex flex-col gap-2">
-              <Button variant="ghost">Login</Button>
-              <Button className="bg-gradient-to-r from-theme-blue to-theme-purple hover:opacity-90 transition-opacity">
-                Get Started
-              </Button>
+              <Link to="/dashboard" className="w-full">
+                <Button variant="ghost" className="w-full">Login</Button>
+              </Link>
+              <Link to="/builder" className="w-full">
+                <Button className="w-full bg-gradient-to-r from-theme-blue to-theme-purple hover:opacity-90 transition-opacity">
+                  Get Started
+                </Button>
+              </Link>
             </div>
           </nav>
         </div>
@@ -71,26 +85,30 @@ const Navbar: React.FC = () => {
   );
 };
 
-const NavLinks: React.FC<{ mobile?: boolean }> = ({ mobile = false }) => {
+const NavLinks: React.FC<{ mobile?: boolean; location: string }> = ({ mobile = false, location }) => {
   const linkClass = mobile
     ? "text-white hover:text-theme-blue transition-colors py-2"
     : "text-white hover:text-theme-blue transition-colors";
 
+  const isActive = (path: string) => {
+    return location === path ? "text-theme-blue" : "";
+  };
+
   return (
     <>
-      <Link to="/themes" className={linkClass}>
+      <Link to="/themes" className={`${linkClass} ${isActive("/themes")}`}>
         Themes
       </Link>
-      <Link to="/builder" className={linkClass}>
+      <Link to="/builder" className={`${linkClass} ${isActive("/builder")}`}>
         Theme Builder
       </Link>
-      <Link to="/pricing" className={linkClass}>
+      <Link to="/pricing" className={`${linkClass} ${isActive("/pricing")}`}>
         Pricing
       </Link>
-      <Link to="/blog" className={linkClass}>
+      <Link to="/blog" className={`${linkClass} ${isActive("/blog")}`}>
         Blog
       </Link>
-      <Link to="/support" className={linkClass}>
+      <Link to="/support" className={`${linkClass} ${isActive("/support")}`}>
         Support
       </Link>
     </>

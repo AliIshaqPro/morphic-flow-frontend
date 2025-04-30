@@ -17,7 +17,14 @@ import ContactPage from "./pages/Contact";
 import ThemeDetails from "./pages/ThemeDetails";
 import { LiveChat } from "./components/ui/live-chat";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false, // default: true
+      retry: 1,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>

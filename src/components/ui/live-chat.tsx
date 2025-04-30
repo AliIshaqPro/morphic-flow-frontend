@@ -16,7 +16,7 @@ type Message = {
 const initialMessages: Message[] = [
   {
     id: 1,
-    text: "Hi there! 👋 How can we help you today?",
+    text: "Hi there! 👋 How can we help you today with your ThemeMorphic project?",
     sender: "support",
     timestamp: new Date(),
   },
@@ -37,6 +37,15 @@ export const LiveChat = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Make sure chat is initialized
+  useEffect(() => {
+    // Force initialization
+    const checkChatVisible = setTimeout(() => {
+      console.log("LiveChat component loaded!");
+    }, 500);
+    return () => clearTimeout(checkChatVisible);
+  }, []);
 
   const handleSendMessage = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -87,8 +96,12 @@ export const LiveChat = () => {
       return "We have over 50 theme designs available across various industries. You can customize any of them in our Theme Builder.";
     } else if (lowerMessage.includes("refund") || lowerMessage.includes("money back")) {
       return "We offer a 30-day money-back guarantee if you're not satisfied with your purchase.";
+    } else if (lowerMessage.includes("help") || lowerMessage.includes("support")) {
+      return "I'm happy to help! What specific aspect of our theme builder do you need assistance with?";
+    } else if (lowerMessage.includes("custom") || lowerMessage.includes("customize")) {
+      return "Our theme builder allows extensive customization including colors, fonts, layouts and features. Would you like me to walk you through the options?";
     } else {
-      return "Thanks for your message! Our team will get back to you within 24 hours. If you need immediate assistance, please check our FAQ section.";
+      return "Thanks for your message! Our team will get back to you within 24 hours. If you need immediate assistance, please check our FAQ section or continue the conversation here.";
     }
   };
 
@@ -102,7 +115,7 @@ export const LiveChat = () => {
       {!isOpen && (
         <Button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-gradient-to-r from-theme-blue to-theme-purple shadow-lg z-50"
+          className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-gradient-to-r from-theme-blue to-theme-purple shadow-lg z-50 animate-pulse-soft"
           aria-label="Open chat"
         >
           <MessageSquare size={24} />
@@ -135,7 +148,7 @@ export const LiveChat = () => {
                     className={`max-w-[80%] rounded-lg p-3 ${
                       msg.sender === "user"
                         ? "bg-theme-blue text-white"
-                        : "glass text-white"
+                        : "bg-gray-800 bg-opacity-70 backdrop-blur-sm text-white"
                     }`}
                   >
                     <p>{msg.text}</p>
@@ -148,7 +161,7 @@ export const LiveChat = () => {
               
               {isTyping && (
                 <div className="flex justify-start">
-                  <div className="max-w-[80%] glass rounded-lg p-3">
+                  <div className="max-w-[80%] bg-gray-800 bg-opacity-70 backdrop-blur-sm rounded-lg p-3">
                     <div className="flex space-x-1">
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>

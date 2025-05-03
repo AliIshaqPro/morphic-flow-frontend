@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Index from "./pages/Index";
 import ThemeBuilder from "./pages/ThemeBuilder";
 import Themes from "./pages/Themes";
@@ -26,29 +27,46 @@ const queryClient = new QueryClient({
   },
 });
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/builder" element={<ThemeBuilder />} />
-          <Route path="/themes" element={<Themes />} />
-          <Route path="/themes/:themeId" element={<ThemeDetails />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/support" element={<Support />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <LiveChat />
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  const [openChat, setOpenChat] = useState(false);
+
+  useEffect(() => {
+    // Listen for custom event to open the live chat
+    const handleOpenLiveChat = () => {
+      setOpenChat(true);
+    };
+
+    window.addEventListener('open-live-chat', handleOpenLiveChat);
+    
+    return () => {
+      window.removeEventListener('open-live-chat', handleOpenLiveChat);
+    };
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/builder" element={<ThemeBuilder />} />
+            <Route path="/themes" element={<Themes />} />
+            <Route path="/themes/:themeId" element={<ThemeDetails />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <LiveChat isOpenProp={openChat} setIsOpenProp={setOpenChat} />
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

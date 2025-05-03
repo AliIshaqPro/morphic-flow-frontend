@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -21,6 +22,15 @@ const Support: React.FC = () => {
     e.preventDefault();
     toast.success("Support ticket submitted successfully!");
     setTicketSubmitted(true);
+  };
+
+  const handleOpenLiveChat = () => {
+    // This will programmatically open the live chat
+    const liveChatEvent = new CustomEvent('open-live-chat');
+    window.dispatchEvent(liveChatEvent);
+    
+    // Show toast to confirm
+    toast.success("Live chat opened!");
   };
 
   return (
@@ -111,7 +121,11 @@ const Support: React.FC = () => {
                       Our support team is available Monday-Friday, 9am-5pm EST.
                     </p>
                   </div>
-                  <Button size="lg" className="bg-gradient-to-r from-theme-blue to-theme-purple hover:opacity-90 transition-opacity">
+                  <Button 
+                    size="lg" 
+                    onClick={handleOpenLiveChat}
+                    className="bg-gradient-to-r from-theme-blue to-theme-purple hover:opacity-90 transition-opacity"
+                  >
                     Start Live Chat
                   </Button>
                 </div>

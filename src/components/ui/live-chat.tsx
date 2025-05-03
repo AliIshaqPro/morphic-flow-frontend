@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
 import { MessageSquare, Send, X } from "lucide-react";
 
@@ -22,13 +22,33 @@ const initialMessages: Message[] = [
   },
 ];
 
-export const LiveChat = () => {
+interface LiveChatProps {
+  isOpenProp?: boolean;
+  setIsOpenProp?: (isOpen: boolean) => void;
+}
+
+export const LiveChat = ({ isOpenProp, setIsOpenProp }: LiveChatProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [newMessage, setNewMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
+  // Sync with external open state if provided
+  useEffect(() => {
+    if (isOpenProp !== undefined) {
+      setIsOpen(isOpenProp);
+    }
+  }, [isOpenProp]);
+
+  // Handle internal state changes and notify parent if needed
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (setIsOpenProp) {
+      setIsOpenProp(open);
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -114,8 +134,8 @@ export const LiveChat = () => {
       {/* Floating chat button */}
       {!isOpen && (
         <Button
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-gradient-to-r from-theme-blue to-theme-purple shadow-lg z-50 animate-pulse-soft"
+          onClick={() => handleOpenChange(true)}
+          className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg z-50 animate-pulse-soft"
           aria-label="Open chat"
         >
           <MessageSquare size={24} />
@@ -123,12 +143,17 @@ export const LiveChat = () => {
       )}
 
       {/* Chat sheet */}
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetContent className="w-[90%] sm:w-[380px] p-0 border-l border-gray-700 bg-theme-darker">
-          <SheetHeader className="bg-gradient-to-r from-theme-blue to-theme-purple p-4 text-white">
+      <Sheet open={isOpen} onOpenChange={handleOpenChange}>
+        <SheetContent className="w-[90%] sm:w-[380px] p-0 border-l border-gray-700 bg-[#1A1F2C]">
+          <SheetHeader className="bg-gradient-to-r from-blue-400 to-purple-500 p-4 text-white relative">
             <div className="flex justify-between items-center">
               <SheetTitle className="text-white">Live Chat Support</SheetTitle>
-              <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="text-white">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => handleOpenChange(false)} 
+                className="text-white absolute top-2 right-2 h-8 w-8 rounded-full hover:bg-white/20"
+              >
                 <X size={18} />
               </Button>
             </div>
@@ -136,7 +161,7 @@ export const LiveChat = () => {
           </SheetHeader>
           
           <div className="flex flex-col h-[calc(100vh-200px)]">
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#1A1F2C]">
               {messages.map((msg) => (
                 <div
                   key={msg.id}
@@ -147,8 +172,8 @@ export const LiveChat = () => {
                   <div
                     className={`max-w-[80%] rounded-lg p-3 ${
                       msg.sender === "user"
-                        ? "bg-theme-blue text-white"
-                        : "bg-gray-800 bg-opacity-70 backdrop-blur-sm text-white"
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-800 text-white"
                     }`}
                   >
                     <p>{msg.text}</p>
@@ -161,7 +186,7 @@ export const LiveChat = () => {
               
               {isTyping && (
                 <div className="flex justify-start">
-                  <div className="max-w-[80%] bg-gray-800 bg-opacity-70 backdrop-blur-sm rounded-lg p-3">
+                  <div className="max-w-[80%] bg-gray-800 rounded-lg p-3">
                     <div className="flex space-x-1">
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
@@ -174,15 +199,19 @@ export const LiveChat = () => {
               <div ref={messagesEndRef} />
             </div>
             
-            <form onSubmit={handleSendMessage} className="p-4 border-t border-gray-700 bg-theme-dark">
+            <form onSubmit={handleSendMessage} className="p-4 border-t border-gray-700 bg-[#1A1F2C]">
               <div className="flex space-x-2">
                 <Input
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   placeholder="Type your message..."
-                  className="bg-theme-darker border-gray-700"
+                  className="bg-gray-800 border-gray-700 focus-visible:ring-blue-500"
                 />
-                <Button type="submit" variant="ghost" disabled={!newMessage.trim()}>
+                <Button 
+                  type="submit" 
+                  disabled={!newMessage.trim()}
+                  className="bg-blue-600 text-white hover:bg-blue-700"
+                >
                   <Send size={18} />
                 </Button>
               </div>

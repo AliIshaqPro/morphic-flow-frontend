@@ -12,7 +12,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageCircle, BookOpen, Send, Check } from "lucide-react";
+import { MessageSquare, BookOpen, Send, Check } from "lucide-react";
 import { toast } from "sonner";
 
 const Support: React.FC = () => {
@@ -57,7 +57,7 @@ const Support: React.FC = () => {
                   FAQs
                 </TabsTrigger>
                 <TabsTrigger value="chat" className="text-base py-3">
-                  <MessageCircle className="mr-2 h-5 w-5" />
+                  <MessageSquare className="mr-2 h-5 w-5" />
                   Live Chat
                 </TabsTrigger>
                 <TabsTrigger value="ticket" className="text-base py-3">
@@ -114,19 +114,22 @@ const Support: React.FC = () => {
                 <div className="glass rounded-xl p-6 text-center">
                   <div className="mb-6">
                     <div className="w-20 h-20 bg-gradient-to-br from-theme-blue to-theme-purple rounded-full flex items-center justify-center mx-auto mb-4">
-                      <MessageCircle className="h-10 w-10" />
+                      <MessageSquare className="h-10 w-10" />
                     </div>
                     <h3 className="text-2xl font-semibold mb-2">Live Chat Support</h3>
                     <p className="text-gray-300 mb-6">
                       Our support team is available Monday-Friday, 9am-5pm EST.
+                      <br />
+                      Get immediate assistance with your ThemeMorphic questions.
                     </p>
                   </div>
                   <Button 
                     size="lg" 
                     onClick={handleOpenLiveChat}
-                    className="bg-gradient-to-r from-theme-blue to-theme-purple hover:opacity-90 transition-opacity"
+                    className="bg-gradient-to-r from-theme-blue to-theme-purple hover:opacity-90 transition-opacity animate-pulse"
                   >
                     Start Live Chat
+                    <MessageSquare className="ml-2 h-5 w-5" />
                   </Button>
                 </div>
               </TabsContent>

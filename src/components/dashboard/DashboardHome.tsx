@@ -2,6 +2,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { Bell } from "lucide-react";
 
 const data = [
   { name: "Jan", visits: 1000, downloads: 400 },

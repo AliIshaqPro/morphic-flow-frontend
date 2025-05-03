@@ -131,21 +131,21 @@ export const LiveChat = ({ isOpenProp, setIsOpenProp }: LiveChatProps) => {
 
   return (
     <>
-      {/* Floating chat button */}
+      {/* Floating chat button - more visible now */}
       {!isOpen && (
         <Button
           onClick={() => handleOpenChange(true)}
-          className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg z-50 animate-pulse-soft"
+          className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg z-50 hover:scale-105 transition-transform"
           aria-label="Open chat"
         >
-          <MessageSquare size={24} />
+          <MessageSquare size={24} className="animate-bounce" />
         </Button>
       )}
 
       {/* Chat sheet */}
       <Sheet open={isOpen} onOpenChange={handleOpenChange}>
-        <SheetContent className="w-[90%] sm:w-[380px] p-0 border-l border-gray-700 bg-[#1A1F2C]">
-          <SheetHeader className="bg-gradient-to-r from-blue-400 to-purple-500 p-4 text-white relative">
+        <SheetContent className="w-[90%] sm:w-[380px] p-0 border-l border-gray-700 bg-[#1A1F2C] rounded-l-lg overflow-hidden">
+          <SheetHeader className="bg-gradient-to-r from-blue-500 to-purple-600 p-4 text-white relative">
             <div className="flex justify-between items-center">
               <SheetTitle className="text-white">Live Chat Support</SheetTitle>
               <Button 
@@ -161,7 +161,7 @@ export const LiveChat = ({ isOpenProp, setIsOpenProp }: LiveChatProps) => {
           </SheetHeader>
           
           <div className="flex flex-col h-[calc(100vh-200px)]">
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#1A1F2C]">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#1A1F2C] scrollbar-thin">
               {messages.map((msg) => (
                 <div
                   key={msg.id}
@@ -170,13 +170,13 @@ export const LiveChat = ({ isOpenProp, setIsOpenProp }: LiveChatProps) => {
                   }`}
                 >
                   <div
-                    className={`max-w-[80%] rounded-lg p-3 ${
+                    className={`max-w-[80%] rounded-lg p-3 shadow-md ${
                       msg.sender === "user"
                         ? "bg-blue-600 text-white"
                         : "bg-gray-800 text-white"
                     }`}
                   >
-                    <p>{msg.text}</p>
+                    <p className="text-sm">{msg.text}</p>
                     <p className="text-xs mt-1 opacity-70 text-right">
                       {formatTime(msg.timestamp)}
                     </p>
@@ -186,7 +186,7 @@ export const LiveChat = ({ isOpenProp, setIsOpenProp }: LiveChatProps) => {
               
               {isTyping && (
                 <div className="flex justify-start">
-                  <div className="max-w-[80%] bg-gray-800 rounded-lg p-3">
+                  <div className="max-w-[80%] bg-gray-800 rounded-lg p-3 shadow-md">
                     <div className="flex space-x-1">
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>

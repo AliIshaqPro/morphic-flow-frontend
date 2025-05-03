@@ -1,12 +1,9 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ArrowDown } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { ArrowRight } from "lucide-react";
 
 const HeroSection: React.FC = () => {
-  const isMobile = useIsMobile();
-  
   return (
     <div className="relative min-h-screen flex items-center justify-center gradient-bg overflow-hidden">
       {/* Decorative elements */}
@@ -87,17 +84,13 @@ const HeroSection: React.FC = () => {
           </div>
         </div>
         
-        {/* Scroll indicator - now responsive */}
-        {!isMobile ? (
-          <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce">
-            <span className="text-sm text-gray-400 mb-2">Scroll to explore</span>
-            <ArrowDown className="w-6 h-6 text-gray-400" />
-          </div>
-        ) : (
-          <div className="fixed bottom-20 right-4 z-10 flex flex-col items-center animate-bounce bg-theme-dark/70 p-2 rounded-full backdrop-blur">
-            <ArrowDown className="w-5 h-5 text-gray-300" />
-          </div>
-        )}
+        {/* Scroll indicator */}
+        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce">
+          <span className="text-sm text-gray-400 mb-2">Scroll to explore</span>
+          <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+          </svg>
+        </div>
       </div>
     </div>
   );
